@@ -77,6 +77,15 @@ function App() {
         <p>Discover the best places in the city</p>
       </header>
 
+      <a
+        href="https://github.com/ImanolSolano/Melp-EDT"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="github-link"
+      >
+        GitHub Repository
+      </a>  
+      
       <div className="controls">
         <button onClick={() => setSortType('name')}>
           Ordenar por nombre
@@ -92,7 +101,7 @@ function App() {
       
 
 
-      <section>
+      <section className='container'>
         <h2>🍴 All Restaurants</h2>
 
         <div className="grid">
