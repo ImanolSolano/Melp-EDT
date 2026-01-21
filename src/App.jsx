@@ -1,13 +1,21 @@
 import { useEffect, useState, useMemo } from 'react';
 import { getRestaurants } from './services/api';
-import RestaurantCard from './components/restaurantCard';
+import RestaurantCard from './components/RestaurantCard';
+import MapView from './components/MapView';
+import StatsPanel from './components/StatsPanel';
+import { useRestaurantsInRadius } from './hooks/useRestaurantsInRadius';
 import './styles.css';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sortType, setSortType] = useState('name'); // name | rating
+
+  const [sortType, setSortType] = useState('name');
+  const [point, setPoint] = useState(null);
+  const [radius, setRadius] = useState(500);
+
+  const defaultCenter = [19.4326, -99.1332];
 
   useEffect(() => {
     getRestaurants()
@@ -39,8 +47,14 @@ function App() {
     return copy;
   }, [restaurants, sortType]);
 
-  if (loading) return <p>Cargando restaurantes...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const { count, avg, std } = useRestaurantsInRadius(
+    restaurants,
+    point,
+    radius
+  );
+
+  if (loading) return <p style={{ padding: 20 }}>Cargando restaurantes...</p>;
+  if (error) return <p style={{ padding: 20 }}>Error: {error}</p>;
 
   return (
     <div className="container">
@@ -61,20 +75,50 @@ function App() {
         </button>
       </div>
 
-      <div className="grid">
-        {sortedRestaurants.map(r => (
-          <RestaurantCard key={r.id} restaurant={r} />
-        ))}
-      </div>
+      <section style={{ marginBottom: '40px' }}>
+        <h2>📍 Restaurants near a point</h2>
+
+        <label>
+          Radius (meters):
+          <input
+            type="number"
+            value={radius}
+            min={100}
+            step={100}
+            onChange={e => setRadius(Number(e.target.value))}
+            style={{ marginLeft: '8px' }}
+          />
+        </label>
+
+        <div className="map-wrapper">
+          <MapView
+          center={point || defaultCenter}
+          radius={radius}
+          onSelectPoint={setPoint}
+          />
+        </div>
+
+
+        {point && (
+          <StatsPanel
+            count={count}
+            avg={avg}
+            std={std}
+          />
+        )}
+      </section>
+
+      <section>
+        <h2>🍴 All Restaurants</h2>
+
+        <div className="grid">
+          {sortedRestaurants.map(r => (
+            <RestaurantCard key={r.id} restaurant={r} />
+          ))}
+        </div>
+      </section>
     </div>
   );
-
 }
-
-const gridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-  gap: '16px'
-};
 
 export default App;
