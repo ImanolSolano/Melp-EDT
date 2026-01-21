@@ -1,3 +1,5 @@
+import SocialButtons from './SocialButtons';
+
 function RestaurantCard({ restaurant }) {
     const { name, rating, address, contact } = restaurant;
 
@@ -14,6 +16,8 @@ function RestaurantCard({ restaurant }) {
             {contact?.phone && (
                 <p className="phone">📞 {contact.phone}</p>
             )}
+
+            <SocialButtons restaurant={restaurant} />
         </div>
     );
 }
