@@ -40,7 +40,7 @@ The application is built using **React + Vite** and deployed on **GitHub Pages**
 
 Original dataset provided by Melp:
 
-https://imanolsolano.github.io/Melp-EDT/
+https://recruiting-datasets.s3.us-east-2.amazonaws.com/data_melp.json
 
 
 ### ⚠️ CORS Consideration
