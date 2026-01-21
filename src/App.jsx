@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { getRestaurants } from './services/api';
 import RestaurantCard from './components/restaurantCard';
+import './styles.css';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
@@ -31,6 +32,10 @@ function App() {
       copy.sort((a, b) => b.rating - a.rating);
     }
 
+    if (sortType === 'rating1') {
+      copy.sort((a, b) => a.rating - b.rating);
+    }
+
     return copy;
   }, [restaurants, sortType]);
 
@@ -38,27 +43,32 @@ function App() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Melp Restaurants</h1>
+    <div className="container">
+      <header className="header">
+        <h1>🍽️ Melp Restaurants</h1>
+        <p>Discover the best places in the city</p>
+      </header>
 
-      {/* CONTROLES */}
-      <div style={{ marginBottom: '16px' }}>
+      <div className="controls">
         <button onClick={() => setSortType('name')}>
           Ordenar por nombre
         </button>
-        <button onClick={() => setSortType('rating')} style={{ marginLeft: '8px' }}>
-          Ordenar por rating
+        <button onClick={() => setSortType('rating')}>
+          Ordenar por rating (mayor a menor)
+        </button>
+        <button onClick={() => setSortType('rating1')}>
+          Ordenar por rating (menor a mayor)
         </button>
       </div>
 
-      {/* LISTA */}
-      <div style={gridStyle}>
+      <div className="grid">
         {sortedRestaurants.map(r => (
           <RestaurantCard key={r.id} restaurant={r} />
         ))}
       </div>
     </div>
   );
+
 }
 
 const gridStyle = {
