@@ -10,7 +10,7 @@ function LocationMarker({ onSelect }) {
     return null;
 }
 
-function MapView({ center, radius, onSelectPoint }) {
+function MapView({ center, radius, onSelectPoint, restaurants = [] }) {
     return (
         <MapContainer
         center={center}

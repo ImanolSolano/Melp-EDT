@@ -107,3 +107,23 @@ button:hover {
     height: 100%;
     width: 100%;
 }
+
+.filters {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0;
+}
+
+.recommendations ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recommendations li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}

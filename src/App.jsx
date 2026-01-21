@@ -5,6 +5,8 @@ import MapView from './components/MapView';
 import StatsPanel from './components/StatsPanel';
 import { useRestaurantsInRadius } from './hooks/useRestaurantsInRadius';
 import './styles.css';
+import { useRecommendations } from './hooks/useRecommendations';
+import Recommendations from './components/Recommendations';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
@@ -47,11 +49,23 @@ function App() {
     return copy;
   }, [restaurants, sortType]);
 
-  const { count, avg, std } = useRestaurantsInRadius(
-    restaurants,
-    point,
-    radius
-  );
+  const {
+  restaurants: nearbyRestaurants,
+  count,
+  avg,
+  std
+  } = useRestaurantsInRadius(restaurants, point, radius);
+  
+  const [minRating, setMinRating] = useState(3);
+  const [maxRating, setMaxRating] = useState(5);
+
+  const recommendations = useRecommendations(
+  restaurants,
+  point,
+  radius,
+  minRating,
+  maxRating
+);
 
   if (loading) return <p style={{ padding: 20 }}>Cargando restaurantes...</p>;
   if (error) return <p style={{ padding: 20 }}>Error: {error}</p>;
@@ -75,11 +89,23 @@ function App() {
         </button>
       </div>
 
+      
+
+
+      <section>
+        <h2>🍴 All Restaurants</h2>
+
+        <div className="grid">
+          {sortedRestaurants.map(r => (
+            <RestaurantCard key={r.id} restaurant={r} />
+          ))}
+        </div>
+      </section>
+
       <section style={{ marginBottom: '40px' }}>
         <h2>📍 Restaurants near a point</h2>
-
-        <label>
-          Radius (meters):
+        
+        <label> Radius (meters):
           <input
             type="number"
             value={radius}
@@ -90,14 +116,41 @@ function App() {
           />
         </label>
 
-        <div className="map-wrapper">
-          <MapView
-          center={point || defaultCenter}
-          radius={radius}
-          onSelectPoint={setPoint}
-          />
+        <div className="filters">
+          <label>
+            Min rating:
+            <input
+              type="number"
+              min={0}
+              max={5}
+              step={0.5}
+              value={minRating}
+              onChange={e => setMinRating(Number(e.target.value))}
+            />
+          </label>
+
+          <label>
+            Max rating:
+            <input
+              type="number"
+              min={0}
+              max={5}
+              step={0.5}
+              value={maxRating}
+              onChange={e => setMaxRating(Number(e.target.value))}
+            />
+          </label>
         </div>
 
+
+        <div className="map-wrapper">
+          <MapView
+            center={point || defaultCenter}
+            radius={radius}
+            onSelectPoint={setPoint}
+            restaurants={nearbyRestaurants}
+          />
+        </div>
 
         {point && (
           <StatsPanel
@@ -106,16 +159,11 @@ function App() {
             std={std}
           />
         )}
-      </section>
 
-      <section>
-        <h2>🍴 All Restaurants</h2>
+        {point && (
+          <Recommendations items={recommendations} />
+        )}
 
-        <div className="grid">
-          {sortedRestaurants.map(r => (
-            <RestaurantCard key={r.id} restaurant={r} />
-          ))}
-        </div>
       </section>
     </div>
   );
