@@ -114,9 +114,6 @@ CSS and JS assets returned 404 due to incorrect base path.
 **Solution:**  
 Configured `vite.config.js`:
 
-```js
-base: '/Melp-EDT/'
-
 ## 🧠 Why Vite instead of Next.js?
 
 For this technical test, **Vite + React** was intentionally chosen over frameworks like **Next.js**, based on the project scope and deployment constraints.
