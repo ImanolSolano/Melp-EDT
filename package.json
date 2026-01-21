@@ -3,12 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ImanolSolano.github.io/Melp-EDT",
+  "homepage": "https://TU_USUARIO.github.io/NOMBRE_REPO/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "deploy": "gh-pages -d dist",
-    "preview": "vite preview"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
